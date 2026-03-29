@@ -12,7 +12,7 @@ from agentome.server import get_server
     help="The artifact dir to run",
     type=click.Path(exists=True, file_okay=False),
 )
-@click.option("--port", default=8009, help="The port to run the server on")
+@click.option("--port", default=8000, help="The port to run the server on")
 @click.option(
     "--transport",
     default="stdio",

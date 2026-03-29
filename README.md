@@ -68,7 +68,21 @@ agentome --artifacts ./artifacts
 
 ### 3. Configure your MCP client
 
-TODO: Add section
+In opencode
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "agentome": {
+      "type": "remote",
+      "url": "http://localhost:8000/mcp",
+      "enabled": true,
+    }
+  }
+}
+```
+ 
 
 ---
 
@@ -154,7 +168,7 @@ agentome --artifacts ./artifacts --transport http --port 8000
 |---|---|---|---|
 | `--artifacts` | `AGENTOME_ARTIFACTS_DIR` | - | Path to artifacts directory |
 | `--transport` | — | `stdio` | `stdio` or `http` |
-| `--port` | — | `8009` | Port for HTTP transport |
+| `--port` | — | `8000` | Port for HTTP transport |
 
 TODO: Add cofiguration via ENV
 
