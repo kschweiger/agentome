@@ -1,3 +1,11 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/kschweiger/agentome/main/docs/assets/agentome_logo_dark.png" />
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/kschweiger/agentome/main/docs/assets/agentome_logo_light.png" />
+    <img alt="docctl logo" src="https://raw.githubusercontent.com/kschweiger/agentome/main/docs/assets/agentome_logo_light.png" width="560" />
+  </picture>
+</p>
+
 # agentome
 
 > A self-hosted MCP server that gives LLM agents accurate, version-matched API documentation for Python libraries.
@@ -82,7 +90,7 @@ In opencode
   }
 }
 ```
- 
+
 
 ---
 
