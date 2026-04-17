@@ -70,6 +70,13 @@ Escalate to a human only when one of these is true:
 - Keep modules and files small enough for agent legibility.
 - Avoid hidden side effects in commands and scripts.
 
+## Python Test and Typing Policy
+- Use `pytest` style tests only; do not introduce `unittest`-based tests.
+- Add explicit type annotations for all Python function parameters and return values, including tests and fixtures.
+- Prefer simple, readable type annotations by default; use complex typing only when it materially improves correctness or maintainability.
+- Treat `typing.Any` as an exception path: the implementing agent must ask for human approval before introducing it.
+- Public-facing APIs must not use `Any` in type annotations.
+
 ## Language and Commit Standards
 - Use English for all programming artifacts and documentation.
 - Commits intended for `main` should use Conventional Commits.

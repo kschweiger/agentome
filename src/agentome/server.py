@@ -2,7 +2,7 @@ from pathlib import Path
 
 from fastmcp import FastMCP
 
-from agentome.models import Package, PackageList
+from agentome.models import PackageList
 from agentome.utils import find_symbol, list_package_versions, load_artifact
 
 
@@ -13,7 +13,7 @@ def get_server(artifacts_dir: Path) -> FastMCP:
             Serves versioned API reference artifacts for Python libraries.
             Use list_packages() to discover what is available, then get_symbol() or
             get_api() to retrieve documentation. Always pass the exact version string
-            as reported by importlib.metadata, pip freeze, pip list or uv pip list in 
+            as reported by importlib.metadata, pip freeze, pip list or uv pip list in
             the target environment.
             """,
     )

@@ -55,6 +55,8 @@ description: "Operating skill for end-to-end agentic harness execution loops."
 
 Recommended checks:
 - `make lint`
+- `make lint-fix` (local autofix workflow)
+- `make format` (local formatting workflow)
 - `make test`
 
 ## Escalation triggers

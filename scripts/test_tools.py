@@ -5,9 +5,10 @@ from fastmcp import Client
 client = Client("http://localhost:8009/mcp")
 
 
-async def call_tool(name: str, args: dict = {}):
+async def call_tool(name: str, args: dict[str, object] | None = None) -> None:
+    payload = args if args is not None else {}
     async with client:
-        result = await client.call_tool(name, args)
+        result = await client.call_tool(name, payload)
         print(result)
 
 
