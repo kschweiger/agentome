@@ -3,10 +3,11 @@ from pathlib import Path
 from fastmcp import FastMCP
 
 from agentome.models import PackageList
-from agentome.utils import find_symbol, list_package_versions, load_artifact
+from agentome.store import ArtifactStore, LocalArtifactStore
+from agentome.utils import find_symbol
 
 
-def get_server(artifacts_dir: Path) -> FastMCP:
+def get_server(store: ArtifactStore) -> FastMCP:
     mcp = FastMCP(
         name="agentome",
         instructions="""
@@ -24,13 +25,7 @@ def get_server(artifacts_dir: Path) -> FastMCP:
         List all packages that have API artifacts available on this server.
         Returns package names and their available versions.
         """
-        packages = {}
-        for package_dir in sorted(artifacts_dir.iterdir()):
-            if package_dir.is_dir():
-                _versions = list_package_versions(artifacts_dir, package_dir.name)
-                if _versions:
-                    packages[package_dir.name] = _versions
-        return PackageList(packages=packages)
+        return PackageList(packages=store.list_packages())
 
     @mcp.tool
     def list_versions(package: str) -> dict:
@@ -40,7 +35,7 @@ def get_server(artifacts_dir: Path) -> FastMCP:
         Args:
             package: The pip package name (e.g. "your-data-pipeline")
         """
-        versions = list_package_versions(artifacts_dir, package)
+        versions = store.list_versions(package)
         return {
             "package": package,
             "versions": versions,
@@ -59,7 +54,7 @@ def get_server(artifacts_dir: Path) -> FastMCP:
             version: Exact version string (e.g. "1.8.0")
         """
         try:
-            return load_artifact(artifacts_dir, package, version)
+            return store.load_artifact(package, version)
         except FileNotFoundError as e:
             return {"error": str(e)}
 
@@ -75,7 +70,7 @@ def get_server(artifacts_dir: Path) -> FastMCP:
             symbol: Class or function name (e.g. "NormalizationPipeline")
         """
         try:
-            artifact = load_artifact(artifacts_dir, package, version)
+            artifact = store.load_artifact(package, version)
         except FileNotFoundError as e:
             return {"error": str(e)}
 
@@ -94,3 +89,7 @@ def get_server(artifacts_dir: Path) -> FastMCP:
         return {"package": package, "version": version, "symbol": symbol, "api": result}
 
     return mcp
+
+
+def get_local_server(artifacts_dir: Path) -> FastMCP:
+    return get_server(LocalArtifactStore(artifacts_dir))
