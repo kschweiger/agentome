@@ -5,7 +5,7 @@ from typing import Callable
 from fastmcp import FastMCP
 from fastmcp.tools.tool import ToolResult
 
-from agentome.server import get_server
+from agentome.server import get_local_server
 
 
 def _call_tool(
@@ -24,7 +24,7 @@ def test_list_packages_returns_packages_with_versions_only(
     artifact_writer(artifact_root, "with_versions", "1.0.0", sample_artifact_payload)
     (artifact_root / "empty_pkg").mkdir()
 
-    server = get_server(artifact_root)
+    server = get_local_server(artifact_root)
     result = _call_tool(server, "list_packages")
 
     assert result.structured_content == {"packages": {"with_versions": ["1.0.0"]}}
@@ -38,7 +38,7 @@ def test_list_versions_returns_versions_and_latest(
     artifact_writer(artifact_root, "pkg", "2.0.0", sample_artifact_payload)
     artifact_writer(artifact_root, "pkg", "1.0.0", sample_artifact_payload)
 
-    server = get_server(artifact_root)
+    server = get_local_server(artifact_root)
     result = _call_tool(server, "list_versions", {"package": "pkg"})
 
     assert result.structured_content == {
@@ -53,7 +53,7 @@ def test_list_versions_returns_none_latest_when_no_versions(
 ) -> None:
     (artifact_root / "pkg").mkdir()
 
-    server = get_server(artifact_root)
+    server = get_local_server(artifact_root)
     result = _call_tool(server, "list_versions", {"package": "pkg"})
 
     assert result.structured_content == {
@@ -70,14 +70,14 @@ def test_get_api_returns_artifact_payload_on_success(
 ) -> None:
     artifact_writer(artifact_root, "pkg", "1.0.0", sample_artifact_payload)
 
-    server = get_server(artifact_root)
+    server = get_local_server(artifact_root)
     result = _call_tool(server, "get_api", {"package": "pkg", "version": "1.0.0"})
 
     assert result.structured_content == sample_artifact_payload
 
 
 def test_get_api_returns_error_dict_when_version_missing(artifact_root: Path) -> None:
-    server = get_server(artifact_root)
+    server = get_local_server(artifact_root)
 
     result = _call_tool(server, "get_api", {"package": "pkg", "version": "9.9.9"})
 
@@ -93,7 +93,7 @@ def test_get_symbol_returns_symbol_payload_on_success(
 ) -> None:
     artifact_writer(artifact_root, "pkg", "1.0.0", sample_artifact_payload)
 
-    server = get_server(artifact_root)
+    server = get_local_server(artifact_root)
     result = _call_tool(
         server,
         "get_symbol",
@@ -119,7 +119,7 @@ def test_get_symbol_returns_error_and_top_level_symbols_when_missing(
 ) -> None:
     artifact_writer(artifact_root, "pkg", "1.0.0", sample_artifact_payload)
 
-    server = get_server(artifact_root)
+    server = get_local_server(artifact_root)
     result = _call_tool(
         server,
         "get_symbol",
