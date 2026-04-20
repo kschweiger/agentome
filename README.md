@@ -241,6 +241,31 @@ AGENTOME_RUN_S3_INTEGRATION=1 uv run pytest tests/test_s3_integration.py
 
 The tests use an ephemeral key prefix per run and perform best-effort cleanup under that prefix only.
 
+### Upload helper script (dev/CI)
+
+Helper script for pushing llmscribe artifacts to S3-compatible store:
+
+```bash
+pip install boto3
+python scripts/upload_artifacts_to_s3.py \
+  --artifacts-dir ./artifacts \
+  --endpoint http://localhost:9000 \
+  --access-key your-access-key \
+  --secret-key your-secret-key \
+  --bucket agentome-artifacts \
+  --prefix team-a
+```
+
+Environment variables are supported for all S3 options (`AGENTOME_ARTIFACTS_DIR`,
+`AGENTOME_S3_ENDPOINT`, `AGENTOME_S3_ACCESS_KEY`, `AGENTOME_S3_SECRET_KEY`,
+`AGENTOME_S3_BUCKET`, `AGENTOME_S3_PREFIX`, `AGENTOME_S3_REGION`).
+
+Defaults and behavior:
+- deterministic sorted upload order
+- skip existing objects by default (`--overwrite` to replace)
+- `--dry-run` for planning without writes
+- JSON summary output for CI parsing
+
 ---
 
 ## How Versioning Works
