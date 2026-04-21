@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Literal
 
 import click
+from dotenv import load_dotenv
 
 from agentome.config import (
     CliConfigInput,
@@ -117,6 +118,7 @@ def main(
     port: int,
     transport: Literal["http", "stdio"],
 ) -> None:
+    load_dotenv(override=False)
     config = resolve_runtime_config(
         CliConfigInput(
             artifact_store=artifact_store,
@@ -184,6 +186,7 @@ def bootstrap_bucket(
     s3_prefix: str,
     s3_region: str,
 ) -> None:
+    load_dotenv(override=False)
     config = resolve_runtime_config(
         CliConfigInput(
             artifact_store="s3",
