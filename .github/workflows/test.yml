@@ -1,0 +1,65 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+      - ci/**
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      rustfs:
+        image: rustfs/rustfs:latest
+        ports:
+          - 9000:9000
+
+    env:
+      AGENTOME_RUN_S3_INTEGRATION: "1"
+      AGENTOME_S3_ENDPOINT: http://127.0.0.1:9000
+      AGENTOME_S3_ACCESS_KEY: rustfsadmin
+      AGENTOME_S3_SECRET_KEY: rustfsadmin
+      AGENTOME_S3_BUCKET: agentome-artifacts-ci
+      AGENTOME_S3_REGION: us-east-1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install dependencies
+        run: uv sync --dev --extra s3
+
+      - name: Wait for RustFS
+        run: |
+          for i in $(seq 1 30); do
+            if curl -s "${AGENTOME_S3_ENDPOINT}" >/dev/null; then
+              echo "RustFS service is reachable!"
+              exit 0
+            fi
+            echo "Waiting for RustFS..."
+            sleep 2
+          done
+          echo "RustFS service did not become reachable"
+          exit 1
+
+      - name: Bootstrap CI bucket
+        run: |
+          uv run python -m agentome.__main__ bootstrap-bucket \
+            --s3-endpoint "${AGENTOME_S3_ENDPOINT}" \
+            --s3-access-key "${AGENTOME_S3_ACCESS_KEY}" \
+            --s3-secret-key "${AGENTOME_S3_SECRET_KEY}" \
+            --s3-bucket "${AGENTOME_S3_BUCKET}" \
+            --s3-region "${AGENTOME_S3_REGION}"
+
+      - name: Run tests
+        run: uv run pytest
