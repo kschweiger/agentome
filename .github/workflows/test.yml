@@ -54,7 +54,7 @@ jobs:
 
       - name: Bootstrap CI bucket
         run: |
-          uv run python -m agentome.__main__ bootstrap-bucket \
+          uv run agentome bootstrap-bucket \
             --s3-endpoint "${AGENTOME_S3_ENDPOINT}" \
             --s3-access-key "${AGENTOME_S3_ACCESS_KEY}" \
             --s3-secret-key "${AGENTOME_S3_SECRET_KEY}" \

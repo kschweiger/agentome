@@ -6,6 +6,8 @@ from agentome.models import PackageList
 from agentome.store import ArtifactStore, LocalArtifactStore
 from agentome.utils import find_symbol
 
+ApiMembers = dict[str, dict[str, object]]
+
 
 def get_server(store: ArtifactStore) -> FastMCP:
     mcp = FastMCP(
@@ -75,7 +77,21 @@ def get_server(store: ArtifactStore) -> FastMCP:
             return {"error": str(e)}
 
         api = artifact.get("api", {})
-        members = api.get("members", {})
+        if not isinstance(api, dict):
+            return {
+                "error": f"Artifact for {package}=={version} has invalid api payload."
+            }
+        members_obj = api.get("members", {})
+        if not isinstance(members_obj, dict):
+            return {
+                "error": f"Artifact for {package}=={version} has invalid "
+                "members payload."
+            }
+
+        members: ApiMembers = {}
+        for key, value in members_obj.items():
+            if isinstance(key, str) and isinstance(value, dict):
+                members[key] = value
 
         result = find_symbol(members, symbol)
         if result is None:

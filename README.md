@@ -89,13 +89,13 @@ artifacts/
 ### 2. Start agentome
 
 ```bash
-agentome --artifacts ./artifacts
+agentome serve --artifacts ./artifacts
 ```
 
 For S3-compatible artifact storage:
 
 ```bash
-agentome \
+agentome serve \
   --artifact-store s3 \
   --s3-endpoint http://localhost:9000 \
   --s3-access-key your-access-key \
@@ -190,10 +190,10 @@ Return the full API reference for an entire package version. Use this when the a
 
 ```bash
 # stdio (default) — for local MCP clients
-agentome --artifacts ./artifacts
+agentome serve --artifacts ./artifacts
 
 # HTTP — for shared internal servers or remote access
-agentome --artifacts ./artifacts --transport http --port 8000
+agentome serve --artifacts ./artifacts --transport http --port 8000
 ```
 
 ---
@@ -221,6 +221,13 @@ Create bucket if missing and verify read/write/list access (idempotent):
 
 ```bash
 agentome bootstrap-bucket \
+  --s3-endpoint http://localhost:9000 \
+  --s3-access-key your-access-key \
+  --s3-secret-key your-secret-key \
+  --s3-bucket agentome-artifacts
+
+# or direct helper entrypoint
+agentome-bootstrap \
   --s3-endpoint http://localhost:9000 \
   --s3-access-key your-access-key \
   --s3-secret-key your-secret-key \

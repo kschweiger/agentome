@@ -10,7 +10,8 @@ requires-python = ">=3.14"
 dependencies = ["click>=8.3.1", "fastmcp>=3.1.1", "pydantic>=2.12.5"]
 
 [project.scripts]
-agentome = "agentome:main"
+agentome = "agentome.cli:cli"
+agentome-bootstrap = "agentome.cli:bootstrap_bucket_entrypoint"
 
 [project.optional-dependencies]
 s3 = ["boto3>=1.42.91", "boto3-stubs[s3]>=1.42.91"]
