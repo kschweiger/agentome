@@ -4,7 +4,7 @@ Issue: https://github.com/kschweiger/agentome/issues/1
 Issue Number: 1
 Issue State: OPEN
 Issue Updated: 2026-03-31T07:19:28Z
-Last Synced: 2026-04-17T08:16:38+00:00
+Last Synced: 2026-04-21T05:52:06+00:00
 
 ## Objective
 The MCP should default to latest version of the requested one cannot be found. Maybe restrict to major versions.
